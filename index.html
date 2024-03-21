@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Status</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f0f0f0;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: 20px auto;
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		h1 {
+			color: #333;
+		}
+
+		.status {
+			margin-top: 20px;
+		}
+
+		.status p {
+			margin-bottom: 10px;
+		}
+
+		.status p span {
+			font-weight: bold;
+		}
+
+		.status p.amber {
+			color: #ff8c00;
+		}
+
+		.status p.red {
+			color: #ff0000;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Status</h1>
+		<div class="status">
+			<p>Water: <span id="water"></span> meter - Status: <span id="waterStatus"></span></p>
+			<p>Wind: <span id="wind"></span> m/s - Status: <span id="windStatus"></span></p>
+		</div>
+	</div>
+
+	<script>
+		function fetchData() {
+			fetch('/data.json')
+				.then(response => response.json())
+				.then(data => {
+					document.getElementById('water').innerText = data.water;
+					document.getElementById('wind').innerText = data.wind;
+					document.getElementById('waterStatus').innerText = getStatus(data.water);
+					document.getElementById('windStatus').innerText = getStatus(data.wind);
+				});
+		}
+
+		function getStatus(value) {
+			if (value < 5) {
+				return 'Aman';
+			} else if (value >= 5 && value <= 8) {
+				return 'Siaga';
+			} else {
+				return 'Bahaya';
+			}
+		}
+
+		// Fetch data initially
+		fetchData();
+
+		// Auto-refresh data every 15 seconds
+		setInterval(fetchData, 15000);
+	</script>
+</body>
+
+</html>
